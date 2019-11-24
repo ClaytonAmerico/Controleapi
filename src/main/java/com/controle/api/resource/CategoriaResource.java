@@ -1,6 +1,7 @@
 package com.controle.api.resource;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -20,6 +21,7 @@ import com.controle.api.event.RecursoCriadoEvent;
 import com.controle.api.model.Categoria;
 import com.controle.api.repository.CategoriaRepository;
 
+
 @RestController
 @RequestMapping("/categorias")
 public class CategoriaResource {
@@ -37,8 +39,8 @@ public class CategoriaResource {
 
 	@GetMapping("/{codigo}")
 	public ResponseEntity<Categoria> buscarPeloCodigo(@PathVariable Long codigo) {
-		Categoria categoria = categoriaRepository.findById(codigo).orElse(null);
-		return categoria != null ? ResponseEntity.status(HttpStatus.OK).body(categoria)	: ResponseEntity.notFound().build();
+		Optional<Categoria> categoria = categoriaRepository.findById(codigo);
+		return categoria.isPresent() ? ResponseEntity.ok(categoria.get()) : ResponseEntity.notFound().build();
 	}
 	
 	@PostMapping

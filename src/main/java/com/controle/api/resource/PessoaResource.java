@@ -1,6 +1,7 @@
 package com.controle.api.resource;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -44,8 +45,8 @@ public class PessoaResource {
 	
 	@GetMapping("/{codigo}")
 	public ResponseEntity<Pessoa> listaPeloCodigo(@PathVariable Long codigo) {
-		Pessoa pessoa = pessoaRepository.findById(codigo).orElse(null);
-		return pessoa != null ? ResponseEntity.status(HttpStatus.OK).body(pessoa) : ResponseEntity.notFound().build();
+		Optional<Pessoa> pessoa = pessoaRepository.findById(codigo);
+		return pessoa.isPresent() ? ResponseEntity.ok(pessoa.get()) : ResponseEntity.notFound().build();
 	}
 	
 	@PostMapping

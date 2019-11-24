@@ -1,5 +1,7 @@
 package com.controle.api.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -26,11 +28,11 @@ public class PessoaService {
 		pessoaRepository.save(pessoaSalva);
 	}
 
-	private Pessoa buscaPessoaPeloCodigo(Long codigo) {
-		Pessoa pessoaSalva = pessoaRepository.findById(codigo).orElse(null);
-		if (pessoaSalva == null) {
+	public Pessoa buscaPessoaPeloCodigo(Long codigo) {
+		Optional<Pessoa> pessoaSalva = pessoaRepository.findById(codigo);
+		if (!pessoaSalva.isPresent()) {
 			throw new EmptyResultDataAccessException(1);
 		}
-		return pessoaSalva;
+		return pessoaSalva.get();
 	}
 }
