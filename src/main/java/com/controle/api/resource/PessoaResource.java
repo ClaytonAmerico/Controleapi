@@ -43,23 +43,23 @@ public class PessoaResource {
 		return pessoaRepository.findAll();
 	}
 	
-	@GetMapping("/{codigo}")
-	public ResponseEntity<Pessoa> listaPeloCodigo(@PathVariable Long codigo) {
-		Optional<Pessoa> pessoa = pessoaRepository.findById(codigo);
-		return pessoa.isPresent() ? ResponseEntity.ok(pessoa.get()) : ResponseEntity.notFound().build();
-	}
-	
 	@PostMapping
 	public ResponseEntity<Pessoa> criar(@Valid @RequestBody Pessoa pessoa, HttpServletResponse response) {
 		Pessoa pessoaSalva = pessoaRepository.save(pessoa);
 		publisher.publishEvent(new RecursoCriadoEvent(this, response, pessoaSalva.getCodigo()));
 		return ResponseEntity.status(HttpStatus.CREATED).body(pessoaSalva);
 	}
+
+	@GetMapping("/{codigo}")
+	public ResponseEntity<Pessoa> buscarPeloCodigo(@PathVariable Long codigo) {
+		Pessoa pessoa = pessoaRepository.findOne(codigo);
+		return pessoa != null ? ResponseEntity.ok(pessoa) : ResponseEntity.notFound().build();
+	}
 	
 	@DeleteMapping("/{codigo}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void remover(@PathVariable Long codigo) {
-		pessoaRepository.deleteById(codigo);
+		pessoaRepository.delete(codigo);
 	}
 	
 	@PutMapping("/{codigo}")

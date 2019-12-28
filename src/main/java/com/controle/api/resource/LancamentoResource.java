@@ -2,7 +2,6 @@ package com.controle.api.resource;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -38,7 +37,7 @@ import com.controle.api.service.exception.PessoaInexistenteOuInativaException;
 public class LancamentoResource {
 	
 	@Autowired
-	private LancamentoRepository lancamentoRepositoy;
+	private LancamentoRepository lancamentoRepository;
 	
 	@Autowired
 	private LancamentoService lancamentoService;
@@ -51,13 +50,13 @@ public class LancamentoResource {
 	
 	@GetMapping
 	public Page<Lancamento> pesquisar(LancamentoFilter lancamentoFilter, Pageable pageable ) {
-		return lancamentoRepositoy.filtrar(lancamentoFilter, pageable);
+		return lancamentoRepository.filtrar(lancamentoFilter, pageable);
 	}
 	
 	@GetMapping("/{codigo}")
-	public ResponseEntity<Lancamento> buscaPeloCodigo(@PathVariable Long codigo) {
-		Optional<Lancamento> lancamento = lancamentoRepositoy.findById(codigo);
-		return lancamento.isPresent() ? ResponseEntity.ok(lancamento.get()) : ResponseEntity.notFound().build(); 
+	public ResponseEntity<Lancamento> buscarPeloCodigo(@PathVariable Long codigo) {
+		Lancamento lancamento = lancamentoRepository.findOne(codigo);
+		return lancamento != null ? ResponseEntity.ok(lancamento) : ResponseEntity.notFound().build();
 	}
 	
 	@PostMapping
@@ -70,7 +69,7 @@ public class LancamentoResource {
 	@DeleteMapping("/{codigo}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void remover(@PathVariable Long codigo) {
-		lancamentoRepositoy.deleteById(codigo);
+		lancamentoRepository.delete(codigo);
 	}
 	
 	@ExceptionHandler({PessoaInexistenteOuInativaException.class})
