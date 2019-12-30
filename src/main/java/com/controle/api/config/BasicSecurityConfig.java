@@ -1,4 +1,4 @@
-package com.controle.api.config.token;
+package com.controle.api.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
